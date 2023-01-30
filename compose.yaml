@@ -32,14 +32,17 @@ services:
       - movie-net
 
   app:
+    build: .
     container_name: movie.app
     command: npm run dev
+    depends_on:
+      - postgres
     env_file:
       - ./.env
-    image: node:19.4-alpine
+    image: movie-app:local
     tty: true
-    volumes:
-      - $PWD:/app
+    # volumes:
+    #   - $PWD:/app
     working_dir: /app
     networks:
       - movie-net
