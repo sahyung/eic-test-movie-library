@@ -1,6 +1,21 @@
-#### Movie Library - Back-End only
+# Movie Library - Back-End only
 
-As an experienced back-end developer, you have to design, develop and deploy the GraphQL back-end of a simple movie library.
+## Description
+
+GraphQL back-end of a simple movie library using [graphql-node-sequelize](https://github.com/sahyung/graphql-node-sequelize) as template.
+
+### Prerequisite
+
+- Docker
+
+#### Quickstart
+
+```bash
+git clone git@github.com:sahyung/eic-test-movie-library.git
+cd eic-test-movie-library
+docker-compose up -d
+docker exec -it movie.app ash -c "npx -y sequelize-cli db:migrate"
+```
 
 ##### Models
 
