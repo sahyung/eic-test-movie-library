@@ -1,0 +1,52 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - movie-net
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+ 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    env_file:
+      - ./.env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    networks:
+      - movie-net
+
+  app:
+    container_name: movie.app
+    command: npm run dev
+    env_file:
+      - ./.env
+    image: node:19.4-alpine
+    tty: true
+    volumes:
+      - $PWD:/app
+    working_dir: /app
+    networks:
+      - movie-net
+    ports:
+      - 3300:3300/tcp
+
+networks:
+  movie-net:
+volumes:
+  pgdata:
