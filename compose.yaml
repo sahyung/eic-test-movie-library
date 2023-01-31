@@ -41,8 +41,8 @@ services:
       - ./.env
     image: movie-app:local
     tty: true
-    volumes:
-      - $PWD:/app
+    # volumes:
+    #   - $PWD:/app
     working_dir: /app
     networks:
       - movie-net
