@@ -59,3 +59,45 @@ mutation createComment {
   }
 }
 
+mutation createAuthor {
+   createAuthor(name: "Jhon Wick") {
+    id
+    name
+  }
+}
+
+mutation updateAuthor {
+   updateAuthor(id: 1, name: "Jhon Wick") {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+query singleAuthor {
+  getSingleAuthor(id: 1) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+query allAuthors {
+  getAllAuthors {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
