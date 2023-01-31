@@ -1,9 +1,7 @@
 const { gql } = require('apollo-server-express');
-const userType = require('./user')
-const postType = require('./post')
-const commentType = require('./comment')
-const authorType = require('./author')
-const movieType = require('./movie')
+const fs = require('fs');
+const path = require('path');
+const basename = path.basename(__filename);
 
 const rootType = gql`
  type Query {
@@ -12,14 +10,15 @@ const rootType = gql`
  type Mutation {
      root: String
  }
-
 `;
 
-module.exports = [
-  rootType,
-  userType,
-  postType,
-  commentType,
-  authorType,
-  movieType,
-];
+let schemas = [rootType];
+fs.readdirSync(__dirname)
+  .filter((file) => (
+    file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+  ))
+  .forEach((file) => {
+    schemas.push(require('./' + file));
+  });
+
+module.exports = schemas;

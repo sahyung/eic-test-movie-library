@@ -1,5 +1,11 @@
 mutation register {
-  register(input: { email: "test@test.com", password: "password", name: "Jon Doe" }) {
+  register(
+    input: {
+      email: "test@test.com"
+      password: "password"
+      name: "Jon Doe"
+    }
+  ) {
     id
     name
     email
@@ -7,7 +13,12 @@ mutation register {
 }
 
 mutation login {
-  login(input: { email: "test@test.com", password: "password" }) {
+  login(
+    input: {
+      email: "test@test.com"
+      password: "password"
+    }
+  ) {
     id
     name
     email
@@ -16,7 +27,10 @@ mutation login {
 }
 
 mutation createPost {
-   createPost(title: "New post", content: "New post content") {
+  createPost(
+    title: "New post"
+    content: "New post content"
+  ) {
     id
     title
     content
@@ -41,7 +55,9 @@ query allPosts {
 }
 
 query singlePost {
-  getSinglePost(postId: 1) {
+  getSinglePost(
+    postId: 1
+  ) {
     id
     title
     content
@@ -52,7 +68,10 @@ query singlePost {
 }
 
 mutation createComment {
-   createComment(content: "New post comment", postId: 1) {
+  createComment(
+    content: "New post comment"
+    postId: 1
+  ) {
     id
     content
     createdAt
@@ -60,14 +79,19 @@ mutation createComment {
 }
 
 mutation createAuthor {
-   createAuthor(name: "Jhon Wick") {
+  createAuthor(
+    name: "Jhon Wick"
+  ) {
     id
     name
   }
 }
 
 mutation updateAuthor {
-   updateAuthor(id: 1, name: "Jhon Wick") {
+  updateAuthor(
+    id: 1
+    name: "Jhon Wick"
+  ) {
     id
     name
     movies {
@@ -79,7 +103,9 @@ mutation updateAuthor {
 }
 
 query singleAuthor {
-  getSingleAuthor(id: 1) {
+  getSingleAuthor(
+    id: 1
+  ) {
     id
     name
     movies {
@@ -98,6 +124,57 @@ query allAuthors {
       id
       name
       year
+    }
+  }
+}
+
+mutation createMovie {
+  createMovie(
+    name: "Jhon Wick"
+    year: 1992
+  ) {
+    id
+    name
+    year
+  }
+}
+
+mutation updateMovie {
+  updateMovie(
+    id: 1
+    name: "Jhon alay"
+    year: 2022
+  ) {
+    id
+    name
+    authors {
+      name
+    }
+  }
+}
+
+query singleMovie {
+  getSingleMovie(
+    id: 1
+  ) {
+    id
+    name
+    year
+    authors {
+      id
+      name
+    }
+  }
+}
+
+query allMovies {
+  getAllMovies {
+    id
+    name
+    year
+    authors {
+      id
+      name
     }
   }
 }
