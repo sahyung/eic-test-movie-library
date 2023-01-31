@@ -178,3 +178,53 @@ query allMovies {
     }
   }
 }
+
+mutation createActor {
+  createActor(
+    name: "Jhon Wick"
+  ) {
+    id
+    name
+  }
+}
+
+mutation updateActor {
+  updateActor(
+    id: 1
+    name: "Jhon Wicked"
+  ) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+query singleActor {
+  getSingleActor(
+    id: 1
+  ) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+query allActors {
+  getAllActors {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
