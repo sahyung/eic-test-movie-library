@@ -2,7 +2,7 @@
 
 ## Description
 
-GraphQL back-end of a simple movie library using [graphql-node-sequelize](https://github.com/sahyung/graphql-node-sequelize) as template.
+[GraphQL back-end of a simple movie library](https://docs.google.com/document/d/1HyoA6ti3HyzIi55dFShQYfuP44ZRDBXTtSMrDGAqM0s/edit#) using [graphql-node-sequelize](https://github.com/sahyung/graphql-node-sequelize) as template.
 
 ### Prerequisite
 
@@ -14,6 +14,7 @@ GraphQL back-end of a simple movie library using [graphql-node-sequelize](https:
 # clone and spin up the services 
 git clone git@github.com:sahyung/eic-test-movie-library.git
 cd eic-test-movie-library
+cp .env.example .env
 docker-compose up -d
 
 # migrate database
@@ -22,41 +23,3 @@ docker exec -it movie.app ash -c "npx -y sequelize-cli db:migrate"
 
 – go to [localhost:3300/graphql](localhost:3300/graphql)
 – copy the example query from `query.graphql` to graphql playground
-
-##### Models
-
-Create the fields and relationships to describe these models.
-
-- Movies
-- Actors
-- Authors
-
-Write the queries and mutations for: create, read, update and delete.
-Dummy data of your choice.
-
-##### Required stack
-
-- Node.js
-- TypeScript
-- [Sequelize.js](https://sequelize.org/)
-- GraphQL
-- [GraphiQL](https://github.com/graphql/graphiql)
-
-##### Stack of choice
-
-- Database (PostgreSQL recommended)
-- Host (Heroku recommend)
-- Public Git repository (GitHub recommended)
-
-##### Endpoints
-
-- “/graphql” as the main end point
-- “/graphiql” as a GraphiQL interface
-
-##### As special care is expected on
-
-- Code quality, readability and cleaness
-- Security, authentication and exposed credentials
-- Performance and scalability
-- Testing
-- CI/CD
