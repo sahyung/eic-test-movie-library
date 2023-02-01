@@ -6,14 +6,50 @@ module.exports = {
   Mutation: {
     async createAuthor(_, { name }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       return Author.create({ name });
     },
 
+    async removeMoviestoAuthor(_, { input }, { user = null }) {
+      if (!user) {
+        throw new AuthenticationError('You must login to access this');
+      }
+      const { id, movies } = input;
+      const a = await Author.findByPk(id);
+      if (a) {
+        const query = `
+          DELETE FROM "AuthorMovies"
+          WHERE id IN (
+            SELECT am.id
+            FROM (
+              SELECT "Movies".id
+              FROM "Movies"
+              WHERE id IN (${movies})
+            ) AS mvs
+            INNER JOIN (
+              SELECT * 
+              FROM "AuthorMovies" am 
+              WHERE am."AuthorId" = ${id}
+            ) am ON mvs.id = am."MovieId"
+          )
+        `;
+
+        await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
+          .catch(error => {
+            console.error(error);
+            throw new Error(error);
+          });
+
+        return { message: "success" };
+      } else {
+        throw new Error(`Author with id ${id} not found`);
+      }
+    },
+
     async addMoviestoAuthor(_, { input }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       const { id, movies } = input;
       const a = await Author.findByPk(id);
@@ -53,10 +89,9 @@ module.exports = {
       }
     },
 
-
     async addNewMoviestoAuthor(_, { input }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       const { id, movies } = input;
       const a = await Author.findByPk(id);
@@ -80,7 +115,7 @@ module.exports = {
 
     async createAuthorWithMovies(_, { input }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       const { name, movies } = input;
       let a = await Author.create({ name });
@@ -95,7 +130,7 @@ module.exports = {
 
     async updateAuthor(_, { id, name }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
 
       const result = await Author.update(
@@ -114,6 +149,30 @@ module.exports = {
         });
 
       return result;
+    },
+
+    async deleteAuthor(_, { id }, { user = null }) {
+      if (!user) {
+        throw new AuthenticationError('You must login to access this');
+      }
+
+      const a = await Author.findByPk(id);
+      if (a) {
+        await sequelize.transaction(async trx => {
+          await AuthorMovie.destroy({
+            where: { AuthorId: id },
+            trx,
+          });
+          await Author.destroy({
+            where: { id },
+            trx,
+          });
+        });
+
+        return a;
+      } else {
+        throw new Error(`Author with id ${id} not found`);
+      }
     },
   },
 

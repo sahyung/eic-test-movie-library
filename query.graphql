@@ -103,6 +103,29 @@ mutation addMoviestoAuthor {
   }
 }
 
+mutation removeMoviestoAuthor {
+  removeMoviestoAuthor(
+    input: {
+      id: 1
+      movies: [
+        1
+        2
+      ]
+    }
+  ) {
+    message
+  }
+}
+
+mutation deleteAuthor {
+  deleteAuthor(
+    id: 1
+  ) {
+    id
+    name
+  }
+}
+
 mutation updateAuthor {
   updateAuthor(
     id: 1

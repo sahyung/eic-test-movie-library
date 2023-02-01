@@ -6,7 +6,7 @@ module.exports = {
   Mutation: {
     async createMovie(_, args, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       const { name, year } = args;
       return Movie.create({ name, year });
@@ -14,7 +14,7 @@ module.exports = {
 
     async updateMovie(_, args, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       const { id, name, year } = args;
       const result = await Movie.update(

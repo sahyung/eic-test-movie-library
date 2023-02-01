@@ -6,14 +6,14 @@ module.exports = {
   Mutation: {
     async createActor(_, { name }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
       return Actor.create({ name });
     },
 
     async updateActor(_, { id, name, movies }, { user = null }) {
       if (!user) {
-        throw new AuthenticationError('You must login to create a post');
+        throw new AuthenticationError('You must login to access this');
       }
 
       const result = await Actor.update(

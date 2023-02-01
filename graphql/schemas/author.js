@@ -11,6 +11,7 @@ module.exports = gql`
         createAuthor(name: String!): Author
         createAuthorWithMovies(input: AuthorWithMoviesInput!): Author
         addMoviestoAuthor(input: AddMoviestoAuthorInput!): Author
+        removeMoviestoAuthor(input: AddMoviestoAuthorInput!): RemoveResponse
         addNewMoviestoAuthor(input: AddNewMoviestoAuthorInput!): Author
         updateAuthor(id: Int!, name: String!): Author
         deleteAuthor(id: Int!): Author
@@ -29,6 +30,10 @@ module.exports = gql`
     input AuthorWithMoviesInput {
         name: String!
         movies: [CreateMovieInput!]!
+    }
+
+    type RemoveResponse {
+        message: String!
     }
 
     extend type Query {
