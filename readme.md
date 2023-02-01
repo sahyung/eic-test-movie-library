@@ -2,7 +2,7 @@
 
 ## Description
 
-[GraphQL back-end of a simple movie library](https://docs.google.com/document/d/1HyoA6ti3HyzIi55dFShQYfuP44ZRDBXTtSMrDGAqM0s/edit#) using [graphql-node-sequelize](https://github.com/sahyung/graphql-node-sequelize) as template.
+[GraphQL back-end of a simple movie library](https://docs.google.com/document/d/1HyoA6ti3HyzIi55dFShQYfuP44ZRDBXTtSMrDGAqM0s/edit#) using graphql-node-sequelize.
 
 ### Prerequisite
 
@@ -22,4 +22,4 @@ docker exec -it movie.app ash -c "npx -y sequelize-cli db:migrate"
 ```
 
 – go to [localhost:3300/graphql](localhost:3300/graphql)
-– copy the example query from `query.graphql` to graphql playground
+– copy the example query from `query.graphql` to graphql playground to test
