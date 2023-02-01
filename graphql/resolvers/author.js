@@ -25,7 +25,11 @@ module.exports = {
             FROM "Movies"
             WHERE id IN (${movies})
           ) AS mvs
-          LEFT JOIN "AuthorMovies" am ON mvs.id = am."MovieId"
+          LEFT JOIN (
+            SELECT * 
+            FROM "AuthorMovies" am 
+            WHERE am."AuthorId" = ${id}
+          ) am ON mvs.id = am."MovieId"
           WHERE am."MovieId" IS NULL;
         `;
         const authorMovies = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
@@ -67,7 +71,7 @@ module.exports = {
         });
         const createdMovies = await Promise.all(moviePromises);
         a.movies = createdMovies;
-        
+
         return a;
       } else {
         throw new Error(`Author with id ${id} not found`);
