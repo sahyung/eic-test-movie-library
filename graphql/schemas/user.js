@@ -7,7 +7,6 @@ module.exports = gql`
      name: String!
      email: String!
      password: String!
-     posts: [Post!]
  }
 
  extend type Mutation {
