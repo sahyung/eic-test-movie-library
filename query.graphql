@@ -87,10 +87,21 @@ mutation createAuthor {
   }
 }
 
-mutation updateAuthor {
-  updateAuthor(
-    id: 1
-    name: "Jhon Wick"
+mutation createAuthorWithMovies {
+  createAuthorWithMovies(
+    input: {
+      name: "Patrick Jane"
+      movies: [
+        {
+          name: "The Mentalist"
+          year: 2006
+        }
+        {
+          name: "The Master"
+          year: 2007
+        }
+      ]
+    }
   ) {
     id
     name
@@ -99,6 +110,58 @@ mutation updateAuthor {
       name
       year
     }
+  }
+}
+
+mutation addNewMoviestoAuthor {
+  addNewMoviestoAuthor(
+    input: {
+      id: 1
+      movies: [
+        {
+          name: "The Watcher"
+          year: 2002
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation addMoviestoAuthor {
+  addMoviestoAuthor(
+    input: {
+      id: 1
+      movies: [
+        1
+        2
+      ]
+    }
+  ) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation updateAuthor {
+  updateAuthor(
+    id: 1
+    name: "Jhon Wick"
+  ) {
+    id
+    name
   }
 }
 

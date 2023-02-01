@@ -8,15 +8,27 @@ module.exports = gql`
     }
 
     extend type Mutation {
-        createAuthor(name: String!): CreateAuthorResponse
-        updateAuthor(id: Int!, name: String!, movies: [Int!]): Author
+        createAuthor(name: String!): Author
+        createAuthorWithMovies(input: AuthorWithMoviesInput!): Author
+        addMoviestoAuthor(input: AddMoviestoAuthorInput!): Author
+        addNewMoviestoAuthor(input: AddNewMoviestoAuthorInput!): Author
+        updateAuthor(id: Int!, name: String!): Author
         deleteAuthor(id: Int!): Author
     }
 
-
-    type CreateAuthorResponse {
+    input AddMoviestoAuthorInput {
         id: Int!
+        movies: [Int!]!
+    }
+
+    input AddNewMoviestoAuthorInput {
+        id: Int!
+        movies: [CreateMovieInput!]!
+    }
+
+    input AuthorWithMoviesInput {
         name: String!
+        movies: [CreateMovieInput!]!
     }
 
     extend type Query {

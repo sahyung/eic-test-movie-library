@@ -14,6 +14,11 @@ module.exports = gql`
         deleteMovie(id: Int!): Movie
     }
 
+    input CreateMovieInput {
+        name: String!
+        year: Int!
+    }
+
     extend type Query {
         getAllMovies: [Movie!]
         getSingleMovie(id: Int!): Movie
