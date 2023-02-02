@@ -21,5 +21,5 @@ docker-compose up -d
 docker exec -it movie.app ash -c "npx -y sequelize-cli db:migrate"
 ```
 
-– go to [localhost:3300/graphql](localhost:3300/graphql)
+– go to graphql playground at [localhost:3300/graphql](localhost:3300/graphql)
 – copy the example query from `query.graphql` to graphql playground to test

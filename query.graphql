@@ -61,8 +61,8 @@ mutation createAuthorWithMovies {
   }
 }
 
-mutation addNewMoviestoAuthor {
-  addNewMoviestoAuthor(
+mutation addNewMoviesToAuthor {
+  addNewMoviesToAuthor(
     input: {
       id: 1
       movies: [
@@ -75,7 +75,7 @@ mutation addNewMoviestoAuthor {
   ) {
     id
     name
-    movies {
+    addedMovies {
       id
       name
       year
@@ -83,8 +83,28 @@ mutation addNewMoviestoAuthor {
   }
 }
 
-mutation addMoviestoAuthor {
-  addMoviestoAuthor(
+mutation addMoviesToAuthor {
+  addMoviesToAuthor(
+    input: {
+      id: 1
+      movies: [
+        1
+        2
+      ]
+    }
+  ) {
+    id
+    name
+    addedMovies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation removeMoviesFromAuthor {
+  removeMoviesFromAuthor(
     input: {
       id: 1
       movies: [
@@ -100,20 +120,6 @@ mutation addMoviestoAuthor {
       name
       year
     }
-  }
-}
-
-mutation removeMoviestoAuthor {
-  removeMoviestoAuthor(
-    input: {
-      id: 1
-      movies: [
-        1
-        2
-      ]
-    }
-  ) {
-    message
   }
 }
 
@@ -123,6 +129,11 @@ mutation deleteAuthor {
   ) {
     id
     name
+    deletedMovies {
+      id
+      name
+      year
+    }
   }
 }
 

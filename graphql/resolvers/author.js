@@ -1,3 +1,4 @@
+const { result } = require('lodash');
 const { Author, AuthorMovie, Movie, sequelize } = require('../../database/models');
 
 const { AuthenticationError } = require('apollo-server-express');
@@ -11,43 +12,28 @@ module.exports = {
       return Author.create({ name });
     },
 
-    async removeMoviestoAuthor(_, { input }, { user = null }) {
+    async removeMoviesFromAuthor(_, { input }, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');
       }
       const { id, movies } = input;
       const a = await Author.findByPk(id);
       if (a) {
-        const query = `
-          DELETE FROM "AuthorMovies"
-          WHERE id IN (
-            SELECT am.id
-            FROM (
-              SELECT "Movies".id
-              FROM "Movies"
-              WHERE id IN (${movies})
-            ) AS mvs
-            INNER JOIN (
-              SELECT * 
-              FROM "AuthorMovies" am 
-              WHERE am."AuthorId" = ${id}
-            ) am ON mvs.id = am."MovieId"
-          )
-        `;
+        a.deletedMovies = await a.getMovies({
+          where: { id: movies }
+        }).then(result => {
+          return a.removeMovies(movies).then(() => {
+            return result;
+          })
+        });
 
-        await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
-          .catch(error => {
-            console.error(error);
-            throw new Error(error);
-          });
-
-        return { message: "success" };
+        return a;
       } else {
         throw new Error(`Author with id ${id} not found`);
       }
     },
 
-    async addMoviestoAuthor(_, { input }, { user = null }) {
+    async addMoviesToAuthor(_, { input }, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');
       }
@@ -55,9 +41,9 @@ module.exports = {
       const a = await Author.findByPk(id);
       if (a) {
         const query = `
-          SELECT mvs.id
+          SELECT mvs.*
           FROM (
-            SELECT "Movies".id
+            SELECT "Movies".*
             FROM "Movies"
             WHERE id IN (${movies})
           ) AS mvs
@@ -70,6 +56,7 @@ module.exports = {
         `;
         const authorMovies = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
           .then(result => {
+            a.addedMovies = result;
             let ams = [];
             result.forEach(elem => ams.push({
               AuthorId: a.id,
@@ -78,7 +65,6 @@ module.exports = {
             return ams;
           })
           .catch(error => {
-            console.error(error);
             throw new Error(error);
           });
         await AuthorMovie.bulkCreate(authorMovies);
@@ -89,15 +75,17 @@ module.exports = {
       }
     },
 
-    async addNewMoviestoAuthor(_, { input }, { user = null }) {
+    async addNewMoviesToAuthor(_, { input }, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');
       }
       const { id, movies } = input;
       const a = await Author.findByPk(id);
+      a.addedMovies = [];
       if (a) {
         const moviePromises = movies.map(async elem => {
           const m = await Movie.create(elem);
+          a.addedMovies.push(m);
           await AuthorMovie.create({
             AuthorId: a.id,
             MovieId: m.id,
@@ -158,6 +146,7 @@ module.exports = {
 
       const a = await Author.findByPk(id);
       if (a) {
+        a.deletedMovies = a.getMovies();
         await sequelize.transaction(async trx => {
           await AuthorMovie.destroy({
             where: { AuthorId: id },
@@ -188,6 +177,12 @@ module.exports = {
   Author: {
     movies(author) {
       return author.getMovies();
+    },
+    addedMovies(author) {
+      return author.addedMovies || [];
+    },
+    deletedMovies(author) {
+      return author.deletedMovies || [];
     },
   },
 };
