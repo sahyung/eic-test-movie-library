@@ -146,7 +146,7 @@ module.exports = {
 
       const a = await Author.findByPk(id);
       if (a) {
-        a.deletedMovies = a.getMovies();
+        a.deletedMovies = await a.getMovies();
         await sequelize.transaction(async trx => {
           await AuthorMovie.destroy({
             where: { AuthorId: id },
