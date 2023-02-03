@@ -5,8 +5,8 @@ module.exports = gql`
         id: Int!
         name: String!
         movies: [Movie!]
-        addedMovies: [Movie]
-        deletedMovies: [Movie]
+        addedMovies: [Movie!]
+        deletedMovies: [Movie!]
     }
 
     extend type Mutation {

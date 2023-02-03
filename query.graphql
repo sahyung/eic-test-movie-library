@@ -115,7 +115,7 @@ mutation removeMoviesFromAuthor {
   ) {
     id
     name
-    movies {
+    deletedMovies {
       id
       name
       year
@@ -230,6 +230,108 @@ mutation createActor {
   ) {
     id
     name
+  }
+}
+
+mutation createActorWithMovies {
+  createActorWithMovies(
+    input: {
+      name: "Patrick Jane"
+      movies: [
+        {
+          name: "The Mentalist"
+          year: 2006
+        }
+        {
+          name: "The Master"
+          year: 2007
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    movies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation addNewMoviesToActor {
+  addNewMoviesToActor(
+    input: {
+      id: 1
+      movies: [
+        {
+          name: "The Watcher"
+          year: 2002
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    addedMovies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation addMoviesToActor {
+  addMoviesToActor(
+    input: {
+      id: 1
+      movies: [
+        1
+        2
+      ]
+    }
+  ) {
+    id
+    name
+    addedMovies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation removeMoviesFromActor {
+  removeMoviesFromActor(
+    input: {
+      id: 1
+      movies: [
+        1
+        2
+      ]
+    }
+  ) {
+    id
+    name
+    deletedMovies {
+      id
+      name
+      year
+    }
+  }
+}
+
+mutation deleteActor {
+  deleteActor(
+    id: 1
+  ) {
+    id
+    name
+    deletedMovies {
+      id
+      name
+      year
+    }
   }
 }
 
