@@ -127,6 +127,44 @@ module.exports = {
       }
     },
 
+    async addNewActorsAuthorsToMovie(_, { input }, { user = null }) {
+      if (!user) {
+        throw new AuthenticationError('You must login to access this');
+      }
+
+      const { id, actors, authors } = input;
+      if (!actors && !authors) {
+        return new Error('Either actors or authors must be provided.');
+      }
+
+      const m = await Movie.findByPk(id);
+      if (m) {
+        if (actors) {
+          m.addedActors = await Actor.bulkCreate(actors);
+          const actorMovies = await m.addedActors.map(a => ({
+            ActorId: a.id,
+            MovieId: m.id,
+          }));
+
+          await ActorMovie.bulkCreate(actorMovies);
+        }
+
+        if (authors) {
+          m.addedAuthors = await Author.bulkCreate(authors);
+          const authorMovies = await m.addedAuthors.map(a => ({
+            AuthorId: a.id,
+            MovieId: m.id,
+          }));
+
+          await AuthorMovie.bulkCreate(authorMovies);
+        }
+
+        return m;
+      } else {
+        throw new Error(`Movie with id ${id} not found`);
+      }
+    },
+
     async updateMovie(_, args, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');

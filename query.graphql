@@ -97,6 +97,39 @@ mutation addActorsAuthorsToMovie {
   }
 }
 
+mutation addNewActorsAuthorsToMovie {
+  addNewActorsAuthorsToMovie(
+    input: {
+      id: 1
+      actors: [
+        {
+          name: "Mary Jane"
+        }
+        {
+          name: "Mary Moonroe"
+        }
+      ]
+      authors: [
+        {
+          name: "Don Juan"
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    year
+    addedActors {
+      id
+      name
+    }
+    addedAuthors {
+      id
+      name
+    }
+  }
+}
+
 mutation createAuthorWithMovies {
   createAuthorWithMovies(
     input: {
