@@ -115,27 +115,32 @@ module.exports = {
       }
     },
 
-    async updateActor(_, { id, name, movies }, { user = null }) {
+    async updateActor(_, { id, name }, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');
       }
 
-      const result = await Actor.update(
-        { name },
-        { 
-          returning: true,
-          where: { id }
-        }
-      )
-      .then(data => {
-        if (data[0]) {
-          return data[1][0];
-        } else {
-          throw new Error(`Actor with id ${id} not found`);
-        }
-      });
+      const a = await Actor.findByPk(id);
+      if (a) {
+        const result = await Actor.update(
+          { name },
+          {
+            returning: true,
+            where: { id }
+          }
+        ).then(data => {
+          if (data[0]) {
+            return data[1][0];
+          } else {
+            throw new Error(`Actor with id ${id} not found`);
+          }
+        });
+  
+        return result;
+      } else {
+        throw new Error(`Actor with id ${id} not found`);
+      }
 
-      return result;
     },
 
     async deleteActor(_, { id }, { user = null }) {
@@ -176,6 +181,12 @@ module.exports = {
   Actor: {
     movies(actor) {
       return actor.getMovies();
+    },
+    addedMovies(actor) {
+      return actor.addedMovies || [];
+    },
+    deletedMovies(actor) {
+      return actor.deletedMovies || [];
     },
   },
 };

@@ -35,6 +35,40 @@ mutation createAuthor {
   }
 }
 
+mutation createMovieWithActorAuthor {
+  createMovieWithActorAuthor(
+    input: {
+      name: "Metal Slug"
+      year: 1999
+      actors: [
+        {
+          name: "Mary Jane"
+        }
+        {
+          name: "Mary Moonroe"
+        }
+      ]
+      authors: [
+        {
+          name: "Don Juan"
+        }
+      ]
+    }
+  ) {
+    id
+    name
+    year
+    actors {
+      id
+      name
+    }
+    authors {
+      id
+      name
+    }
+  }
+}
+
 mutation createAuthorWithMovies {
   createAuthorWithMovies(
     input: {
@@ -187,14 +221,12 @@ mutation createMovie {
 mutation updateMovie {
   updateMovie(
     id: 1
-    name: "Jhon alay"
+    name: "Metal Gear"
     year: 2022
   ) {
     id
     name
-    authors {
-      name
-    }
+    year
   }
 }
 
@@ -205,6 +237,10 @@ query singleMovie {
     id
     name
     year
+    actors {
+      id
+      name
+    }
     authors {
       id
       name
@@ -217,6 +253,10 @@ query allMovies {
     id
     name
     year
+    actors {
+      id
+      name
+    }
     authors {
       id
       name
@@ -342,11 +382,6 @@ mutation updateActor {
   ) {
     id
     name
-    movies {
-      id
-      name
-      year
-    }
   }
 }
 

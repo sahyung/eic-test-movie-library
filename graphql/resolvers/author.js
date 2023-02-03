@@ -121,22 +121,26 @@ module.exports = {
         throw new AuthenticationError('You must login to access this');
       }
 
-      const result = await Author.update(
-        { name },
-        {
-          returning: true,
-          where: { id }
-        }
-      )
-        .then(data => {
+      const a = await Author.findByPk(id);
+      if (a) {
+        const result = await Author.update(
+          { name },
+          {
+            returning: true,
+            where: { id }
+          }
+        ).then(data => {
           if (data[0]) {
             return data[1][0];
           } else {
             throw new Error(`Author with id ${id} not found`);
           }
         });
-
-      return result;
+  
+        return result;
+      } else {
+        throw new Error(`Author with id ${id} not found`);
+      }
     },
 
     async deleteAuthor(_, { id }, { user = null }) {

@@ -15,7 +15,7 @@ module.exports = gql`
         addMoviesToActor(input: AddMoviesToActorInput!): Actor
         addNewMoviesToActor(input: AddNewMoviesToActorInput!): Actor
         removeMoviesFromActor(input: AddMoviesToActorInput!): Actor
-        updateActor(id: Int!, name: String!, movies: [Int!]): Actor
+        updateActor(id: Int!, name: String!): Actor
         deleteActor(id: Int!): Actor
     }
 
