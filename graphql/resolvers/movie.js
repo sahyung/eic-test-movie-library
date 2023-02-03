@@ -47,32 +47,107 @@ module.exports = {
       return m;
     },
 
+    async addActorsAuthorsToMovie(_, { input }, { user = null }) {
+      if (!user) {
+        throw new AuthenticationError('You must login to access this');
+      }
+
+      const { id, actors, authors } = input;
+      if (!actors && !authors) {
+        return new Error('Either actors or authors must be provided.');
+      }
+
+      const m = await Movie.findByPk(id);
+      if (m) {
+        if (actors) {
+          const query = `
+            SELECT acs.*
+            FROM (
+              SELECT "Actors".*
+              FROM "Actors"
+              WHERE id IN (${actors})
+            ) AS acs
+            LEFT JOIN (
+              SELECT * 
+              FROM "ActorMovies" am 
+              WHERE am."MovieId" = ${id}
+            ) am ON acs.id = am."ActorId"
+            WHERE am."ActorId" IS NULL;
+          `;
+          const actorMovies = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
+            .then(result => {
+              m.addedActors = result;
+              let ams = [];
+              result.forEach(elem => ams.push({
+                ActorId: elem.id,
+                MovieId: m.id,
+              }));
+              return ams;
+            })
+            .catch(error => {
+              throw new Error(error);
+            });
+          await ActorMovie.bulkCreate(actorMovies);
+        }
+
+        if (authors) {
+          const query = `
+            SELECT aus.*
+            FROM (
+              SELECT "Authors".*
+              FROM "Authors"
+              WHERE id IN (${authors})
+            ) AS aus
+            LEFT JOIN (
+              SELECT * 
+              FROM "AuthorMovies" am 
+              WHERE am."MovieId" = ${id}
+            ) am ON aus.id = am."AuthorId"
+            WHERE am."AuthorId" IS NULL;
+          `;
+          const authorMovies = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT })
+            .then(result => {
+              m.addedAuthors = result;
+              let ams = [];
+              result.forEach(elem => ams.push({
+                AuthorId: elem.id,
+                MovieId: m.id,
+              }));
+              return ams;
+            })
+            .catch(error => {
+              throw new Error(error);
+            });
+          await AuthorMovie.bulkCreate(authorMovies);
+        }
+
+        return m;
+      } else {
+        throw new Error(`Movie with id ${id} not found`);
+      }
+    },
+
     async updateMovie(_, args, { user = null }) {
       if (!user) {
         throw new AuthenticationError('You must login to access this');
       }
 
-      const m = await Movie.findByPk(id);
-      if (m) {
-        const { id, name, year } = args;
-        const result = await Movie.update(
-          { name, year },
-          {
-            returning: true,
-            where: { id }
-          }
-        ).then(data => {
-          if (data[0]) {
-            return data[1][0];
-          } else {
-            throw new Error(`Movie with id ${id} not found`);
-          }
-        });
+      const { id, name, year } = args;
+      const result = await Movie.update(
+        { name, year },
+        {
+          returning: true,
+          where: { id }
+        }
+      ).then(data => {
+        if (data[0]) {
+          return data[1][0];
+        } else {
+          throw new Error(`Movie with id ${id} not found`);
+        }
+      });
 
-        return result;
-      } else {
-        throw new Error(`Author with id ${id} not found`);
-      }
+      return result;
     },
   },
 
@@ -91,6 +166,18 @@ module.exports = {
     },
     authors(movie) {
       return movie.getAuthors();
+    },
+    addedActors(movie) {
+      return movie.addedActors || [];
+    },
+    deletedActors(movie) {
+      return movie.deletedActors || [];
+    },
+    addedAuthors(movie) {
+      return movie.addedAuthors || [];
+    },
+    deletedAuthors(movie) {
+      return movie.deletedAuthors || [];
     },
   },
 };

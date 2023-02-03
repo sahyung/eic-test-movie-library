@@ -69,6 +69,34 @@ mutation createMovieWithActorAuthor {
   }
 }
 
+mutation addActorsAuthorsToMovie {
+  addActorsAuthorsToMovie(
+    input: {
+      id: 1
+      actors: [
+        1
+        2
+      ]
+      authors: [
+        1
+        2
+      ]
+    }
+  ) {
+    id
+    name
+    year
+    addedActors {
+      id
+      name
+    }
+    addedAuthors {
+      id
+      name
+    }
+  }
+}
+
 mutation createAuthorWithMovies {
   createAuthorWithMovies(
     input: {

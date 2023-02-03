@@ -120,27 +120,21 @@ module.exports = {
         throw new AuthenticationError('You must login to access this');
       }
 
-      const a = await Actor.findByPk(id);
-      if (a) {
-        const result = await Actor.update(
-          { name },
-          {
-            returning: true,
-            where: { id }
-          }
-        ).then(data => {
-          if (data[0]) {
-            return data[1][0];
-          } else {
-            throw new Error(`Actor with id ${id} not found`);
-          }
-        });
-  
-        return result;
-      } else {
-        throw new Error(`Actor with id ${id} not found`);
-      }
+      const result = await Actor.update(
+        { name },
+        {
+          returning: true,
+          where: { id }
+        }
+      ).then(data => {
+        if (data[0]) {
+          return data[1][0];
+        } else {
+          throw new Error(`Actor with id ${id} not found`);
+        }
+      });
 
+      return result;
     },
 
     async deleteActor(_, { id }, { user = null }) {

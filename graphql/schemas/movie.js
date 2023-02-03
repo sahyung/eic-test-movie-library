@@ -9,8 +9,8 @@ module.exports = gql`
         authors: [Author!]
         addedActors: [Actor!]
         addedAuthors: [Author!]
-        deletedctors: [Actor!]
-        deleteduthors: [Author!]
+        deletedActors: [Actor!]
+        deletedAuthors: [Author!]
     }
 
     extend type Mutation {
